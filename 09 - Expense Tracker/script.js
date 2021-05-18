@@ -6,19 +6,21 @@ const form = document.getElementById('form');
 const text = document.getElementById('text');
 const amount = document.getElementById('amount');
 
-const dummyTransactions = [
-    { id: 1, text: 'Flower', amount: -20 },
-    { id: 2, text: 'Salary', amount: 300 },
-    { id: 3, text: 'Book', amount: -10 },
-    { id: 4, text: 'Camera', amount: 150 }
-];
+// const dummyTransactions = [
+//     { id: 1, text: 'Flower', amount: -20 },
+//     { id: 2, text: 'Salary', amount: 300 },
+//     { id: 3, text: 'Book', amount: -10 },
+//     { id: 4, text: 'Camera', amount: 150 }
+// ];
 
-let transactions = dummyTransactions;
+const localStorageTransactions = JSON.parse(localStorage.getItem('transactions'));
+
+let transactions = localStorage.getItem('transactions') !== null ? localStorageTransactions : [];
 
 function addTransaction(e) {
     e.preventDefault();
 
-    if (!text.value.trim() || !amount.value.trim()) {
+    if (text.value.trim() === '' || amount.value.trim() === '') {
         alert('Please fill out the form');
     } else {
         const transaction = {
@@ -28,9 +30,11 @@ function addTransaction(e) {
         }
 
         transactions.push(transaction);
+        
 
         addTransactionDOM(transaction);
         updateValues();
+        updateLocalStorage();
 
         text.value = '';
         amount.value = '';
@@ -60,25 +64,29 @@ function addTransactionDOM(transaction) {
 }
 
 // Update the balance, income and expense
-function updateValues() {
+function updateValues() {       
     const amounts = transactions.map(transaction => transaction.amount);
 
-    const total = amounts.reduce((acc, item) => acc += item).toFixed(2);
-    const expense = (amounts.filter(number => number < 0).reduce((acc, item) => acc += item) * -1).toFixed(2);
-    const income = amounts.filter(number => number > 0).reduce((acc,item) => acc += item).toFixed(2);
-
-    console.log(total);
+    const total = amounts.reduce((acc, item) => (acc += item), 0).toFixed(2);
+    const expense = (amounts.filter(number => number < 0).reduce((acc, item) => (acc += item), 0) * -1).toFixed(2);
+    const income = amounts.filter(number => number > 0).reduce((acc,item) => (acc += item), 0).toFixed(2);
 
     balance.innerText = `$${total}`;
     money_plus.innerText = `+$${income}`;
     money_minus.innerText = `-$${expense}`;
 }
 
+
 // remove transactions by id
 function removeTransaction(id) {
     transactions = transactions.filter(transaction => transaction.id !== id);
-
+    updateLocalStorage();
     init();
+}
+
+// update local storage transactions
+function updateLocalStorage() {
+    localStorage.setItem('transactions', JSON.stringify(transactions));
 }
 
 // init app
