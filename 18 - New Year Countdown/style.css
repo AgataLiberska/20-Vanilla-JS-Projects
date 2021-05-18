@@ -28,6 +28,17 @@ h1 {
     margin: -80px 0 40px;
 }
 
+.year {
+    font-size: 200px;
+    z-index: -1;
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    opacity: 0.2;
+
+}
+
 .countdown {
     display: flex;
     transform: scale(2);
