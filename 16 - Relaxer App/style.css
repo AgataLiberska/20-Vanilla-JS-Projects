@@ -93,7 +93,7 @@ body {
         transform: scale(1);
     }
 
-    tp {
+    to {
         transform: scale(1.2);
     }
 }
@@ -102,12 +102,12 @@ body {
     animation: shrink 3s linear forwards;
 }
 
-@keyframes grow {
+@keyframes shrink {
     from {
         transform: scale(1.2);
     }
 
-    tp {
+    to {
         transform: scale(1);
     }
 }
